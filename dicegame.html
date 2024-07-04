@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roll</title>
+    <style>
+		body {
+			background-color: #bb7070;
+			overflow: hidden;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		#dice{
+			width: 15%;
+		}
+
+        #dice-result {
+            font-size: 2em;
+            font-weight: bold;
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+		#button-div button{
+			position: fixed;
+			top: 40%;
+			font-size: calc((2vw + 2vh) / 2);
+			z-index: 30;
+			border-radius: 20px;
+			color: #FFF;
+			min-width: 50px;
+			min-height: 100px;
+		}
+
+		#player1Btn{
+			width: 20%;
+			height: 20%;
+			left: 15%;
+			/* font-size: 1vw; */
+			background-color: #64973C;
+			border-color: #64973C;
+		}
+
+		#player2Btn{
+			width: 20%;
+			height: 20%;
+			right: 15%;
+			background-color: #64973C;
+			border-color: #64973C;
+		}
+
+		#rollBtn{
+			position: fixed;
+			top:75%;
+			width: 30%;
+			height: 10%;
+			border-radius: 20px;
+			max-width: 400px;
+			max-height: 100px;
+		}
+
+		img {
+			position: fixed;
+			top: 35%;
+            height: auto;
+        }
+		#dice {
+			display: none;
+			width: 20%;
+			/* height: 20%; */
+			max-width: 200px;
+		}
+		#dice_img {
+			width: 20%;
+			/* height: 20%; */
+			/* display: none; */
+			top: 35%;
+			max-width: 200px;
+		}
+
+		@media screen and (min-height: 600px){
+			#button-div{
+				font-size: calc((2vw + 12px) / 2);	
+			}
+		}
+		@media screen and (min-width: 600px){
+			#button-div{
+				font-size: calc((12px + 2vh) / 2);	
+			}
+		}
+		@media screen and (min-height: 600px) and (min-width: 600px){
+			#button-div{
+				font-size: 12px;	
+			}
+		}
+
+		@media screen and (max-height: 500px){
+			#dice{
+				width: 100px ;
+			}
+			#dice_img{
+				width: 100px;
+			}
+		}
+
+    </style>
+</head>
+<body>
+	<img src="./dice-game.gif" id="dice"/>
+
+    <div id="dice-result"></div>
+
+	<div id="button-div">
+		<button id="player1Btn"></button>
+		<button id="player2Btn"></button>
+	</div>
+	<button id="rollBtn">Roll Dice</button>
+
+	<img src="./dice_default.png" id="dice_img"/>
+
+    <script>
+
+		let player1Ready = false;
+		let player2Ready = false;
+		
+		/* playerNames[0] = even select player, playerNames[1] = odd select player */
+		const playerNames = ["sungyoon", "jaejilee"];
+		let dice;
+		const img = document.getElementById('#img');
+		const p1 = document.getElementById('player1Btn');
+		const p2 = document.getElementById('player2Btn');
+		const roll = document.getElementById('rollBtn');
+
+		p1.innerText = playerNames[0] + "\n\n Ready?"
+		p2.innerText = playerNames[1] + "\n\n Ready?"
+		p1.addEventListener("click", (e) => {
+			p1.innerText = playerNames[0] + "\n\n Ready!";
+			p1.style.backgroundColor = "#D64747";
+			p1.style.borderColor = "#D64747";
+			player1Ready = true;
+		})
+		p2.addEventListener("click", (e) => {
+			p2.innerText = playerNames[1] + "\n\n Ready!";
+			p2.style.backgroundColor = "#D64747";
+			p2.style.borderColor = "#D64747";
+			player2Ready = true;
+		})
+		roll.addEventListener("click", (e) => {
+			if (player1Ready == false || player2Ready == false){
+				alert("Please ready before rolling!");
+				return ;
+			}
+
+			// Show the GIF for 2 seconds, then display the dice roll result
+			document.querySelector('#dice').style.display = 'block';
+			document.querySelector('#dice_img').style.display = 'none';
+			roll.innerText = "Rolling..";
+			roll.disabled = true;
+			
+			setTimeout(() => {
+				// Get the dice roll result
+				dice = rollDice();
+				
+				// Display the dice roll result
+				window.dice_img.src = `./dice${dice}.png`;
+				window.dice_img.style.display = 'block';
+				window.dice.style.display = 'none';
+				setTimeout(() => {
+					let res = dice % 2;
+					if (res == 1){
+						alert("Odd Number Win!!");
+					} else {
+						alert("Even Number Win!!");
+					}
+					alert("Congratulation! " + playerNames[res] + "~~");
+				}, 100)
+			}, 2000); // 2000 milliseconds = 2 seconds
+		})
+		
+        // Function to generate a random dice roll (1-6)
+        function rollDice() {
+            return Math.floor(Math.random() * 6) + 1;
+        }
+    </script>
+</body>
+</html>
